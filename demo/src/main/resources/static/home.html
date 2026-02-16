@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lays.com</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="logo">Lays</div>
+    <nav class="nav-links">
+      <a href="#products-section" class="nav-link">MoreFlavours</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="hero">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="laalchip.mp4" type="video/mp4" />
+  </video>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Taste The <br> Crispy <br> Magic<br>
+      <a href="#products-section" class="explore-btn">Explore More</a>
+    </h1><br>
+
+    
+
+    
+  </div>
+</main>
+
+<!-- Products -->
+<section class="products-section" id="products-section">
+  <h1 class="products-title">Products</h1>
+
+  <div class="slider-wrapper">
+    <button class="nav-btn left">&#10094;</button>
+    <div class="slider" id="slider"></div>
+    <button class="nav-btn right">&#10095;</button>
+  </div>
+</section>
+
+
+
+
+
+<script>
+const products = [
+  { id:1, image:"../images/lays1.png", bg:"#93b31c" },
+  { id:2, image:"../images/lays5.png", bg:"#e30613" },
+  { id:3, image:"../images/lays4.png", bg:"#8b0000" },
+  { id:4, image:"../images/lays2.png", bg:"#a9c8d8" },
+  { id:5, image:"../images/lays3.png", bg:"#c63d1f" }
+];
+
+const slider = document.getElementById("slider");
+
+products.forEach(product => {
+  const slide = document.createElement("div");
+  slide.classList.add("slide");
+  slide.style.background = product.bg;
+
+  const img = document.createElement("img");
+  img.src = product.image;
+  img.style.cursor = "pointer";
+
+  img.addEventListener("click", () => {
+    window.location.href = `products.html?id=${product.id}`;
+  });
+
+  slide.appendChild(img);
+  slider.appendChild(slide);
+});
+
+let index = 0;
+
+document.querySelector(".right").addEventListener("click", () => {
+  if (index < products.length - 4) {
+    index++;
+    slider.style.transform = `translateX(-${index * 25}%)`;
+  }
+});
+
+document.querySelector(".left").addEventListener("click", () => {
+  if (index > 0) {
+    index--;
+    slider.style.transform = `translateX(-${index * 25}%)`;
+  }
+});
+
+/* Navbar scroll effect */
+window.addEventListener("scroll", () => {
+  const navbar = document.getElementById("navbar");
+  navbar.classList.toggle("scrolled", window.scrollY > 50);
+});
+
+
+</script>
+
+
+
+<footer class="lays-footer" id="about">
+
+  <div class="footer-logo">
+    <img src="../images/logoo.jpeg" alt="Lays Logo">
+  </div>
+
+  <div class="footer-links">
+    <a href="#">FAQ</a>
+    <a href="Terms.html">Terms of Use</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Accessibility Statement</a>
+    <a href="#">About Our Ads</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+
+  <p class="footer-copy">
+    All snack brands are registered trademarks of North India, Inc. ©2026.
+  </p>
+
+</footer>
+
+</body>
+</html>

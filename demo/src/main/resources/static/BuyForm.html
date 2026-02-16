@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lays Order Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="order-page">
+
+    <div class="container">
+
+        <h1 class="title">🥔 Lays Wafers Order</h1>
+
+        <form id="orderForm">
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" required>
+            </div>
+
+            <div class="input-group">
+                <label>Address</label>
+                <textarea id="address" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Flavor</label>
+                <select id="flavour">
+                    <option value="Salted Vinegar">Salted Vinegar</option>
+                    <option value="Smoke BBQ">Smoke BBQ</option>
+                    <option value="Crab Spice">Crab Spice</option>
+                    <option value="Chile Lemon">Chile Lemon</option>
+                    <option value="Honey BBQ">Honey BBQ</option>
+                </select>
+            </div>
+<!-- FLAVOUR PREVIEW SECTION -->
+<div class="flavour-preview">
+
+    <!-- LEFT SIDE DESCRIPTION -->
+    <div class="flavour-description" id="flavourDescription">
+        <h2>Salted Vinegar</h2>
+        <p>Crispy wafers with a perfect balance of salt and tangy vinegar.</p>
+    </div>
+
+    <!-- RIGHT SIDE IMAGE -->
+    <div class="flavour-image">
+        <img id="flavourImage" src="images/salted.png" alt="Flavour Image">
+    </div>
+
+</div>
+
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity" min="1" value="1" required>
+            </div>
+
+            <!-- PRICE DISPLAY -->
+            <div class="price-box">
+                <p>Price per Packet: ₹<span id="unitPrice">20</span></p>
+                <p class="total-text">
+                    Total Price: ₹<span id="totalPrice">20</span>
+                </p>
+            </div>
+
+            <button type="submit" class="btn">🚀 Place Order</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- POPUP -->
+<div class="order-page">
+    <div class="popup-overlay" id="popup">
+        <div class="popup-box">
+            <div class="checkmark">✔</div>
+            <h2>Order Placed Successfully!</h2>
+            <p id="finalAmount"></p>
+            <button class="btn" id="closePopup">Continue Shopping</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- FLOATING CHIPS -->
+<div class="floating-chips">
+    <img src="../images/lays1.png" class="float-chip">
+    <img src="../images/lays2.png" class="float-chip">
+    <img src="../images/lays3.png" class="float-chip">
+     <img src="../images/lays4.png" class="float-chip">
+      <img src="../images/lays5.png" class="float-chip">
+</div>
+
+
+<script>
+
+// PRICE LIST (Dynamic Pricing)
+const priceMap = {
+    "Salted Vinegar": 99,
+    "Smoke BBQ": 89,
+    "Crab Spice": 77,
+    "Chile Lemon": 50,
+    "Honey BBQ": 39
+};
+
+const flavourSelect = document.getElementById("flavour");
+const quantityInput = document.getElementById("quantity");
+const unitPriceSpan = document.getElementById("unitPrice");
+const totalPriceSpan = document.getElementById("totalPrice");
+
+function updatePrice() {
+    const selectedFlavour = flavourSelect.value;
+    const quantity = parseInt(quantityInput.value) || 1;
+
+    const unitPrice = priceMap[selectedFlavour];
+    const totalPrice = unitPrice * quantity;
+
+    unitPriceSpan.innerText = unitPrice;
+    totalPriceSpan.innerText = totalPrice;
+}
+
+// Update price when flavour changes
+flavourSelect.addEventListener("change", updatePrice);
+
+// Update price when quantity changes
+quantityInput.addEventListener("input", updatePrice);
+
+// INITIAL CALL
+updatePrice();
+
+
+// PLACE ORDER
+document.getElementById("orderForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const selectedFlavour = flavourSelect.value;
+    const quantity = parseInt(quantityInput.value);
+    const unitPrice = priceMap[selectedFlavour];
+    const totalPrice = unitPrice * quantity;
+
+    const orderData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        address: document.getElementById("address").value,
+        flavour: selectedFlavour,
+        quantity: quantity,
+        unitPrice: unitPrice,
+        totalPrice: totalPrice
+    };
+
+    try {
+        const response = await fetch("http://localhost:8080/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(orderData)
+        });
+
+        if (response.ok) {
+            document.getElementById("popup").classList.add("active");
+            document.getElementById("finalAmount").innerText =
+                "Total amount : ₹" + totalPrice;
+            this.reset();
+            updatePrice();
+        } else {
+            alert("Order failed!");
+        }
+
+    } catch (error) {
+        alert("Server not reachable!");
+    }
+});
+
+// CLOSE POPUP
+document.getElementById("closePopup").addEventListener("click", () => {
+    document.getElementById("popup").classList.remove("active");
+    window.location.href = "home.html";
+});
+
+
+
+// FLAVOUR DATA (For Preview Section)
+const flavourData = {
+    "Salted Vinegar": {
+        desc: "Crispy wafers with a perfect balance of salt and tangy vinegar.",
+        img: "../images/lays2.png"
+    },
+    "Smoke BBQ": {
+        desc: "Smoky barbecue flavour bursting with bold spices.",
+        img: "../images/lays1.png"
+    },
+    "Crab Spice": {
+        desc: "Exotic crab seasoning blended with crunchy delight.",
+        img: "../images/lays3.png"
+    },
+    "Chile Lemon": {
+        desc: "Zesty lemon mixed with spicy chilli punch.",
+        img: "../images/lays5.png"
+    },
+    "Honey BBQ": {
+        desc: "Sweet honey glaze combined with smoky BBQ twist.",
+        img: "../images/lays4.png"
+    }
+};
+
+const flavourImage = document.getElementById("flavourImage");
+const flavourDescription = document.getElementById("flavourDescription");
+
+// Update preview on flavour change
+flavourSelect.addEventListener("change", function () {
+
+    const selected = this.value;
+
+    flavourDescription.innerHTML = `
+        <h2>${selected}</h2>
+        <p>${flavourData[selected].desc}</p>
+    `;
+
+    flavourImage.classList.remove("show");
+    flavourImage.src = flavourData[selected].img;
+
+    flavourImage.onload = () => {
+        flavourImage.classList.add("show");
+    };
+});
+
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lays Product</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="logo">Lays</div>
+    <nav class="nav-links">
+      <a href="home.html#products-section" class="nav-link">MoreFlavours</a>
+      <a href="home.html#about" class="nav-link">About</a>
+    </nav>
+  </div>
+</header>
+
+<section class="product-hero" id="hero">
+  <button class="nav-arrow left" id="prev">&#10094;</button>
+  <img id="productImage" class="product-image" />
+  <button class="nav-arrow right" id="next">&#10095;</button>
+</section>
+
+<section class="product-info">
+  <h1 id="productTitle"></h1>
+
+  <div class="accordion">
+    <div class="accordion-item">
+      <button class="accordion-header">Description</button>
+      <div class="accordion-body" id="description"></div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">Nutrition Facts</button>
+      <div class="accordion-body" id="nutrition"></div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-header">Product Reviews</button>
+      <div class="accordion-body" id="reviews"></div>
+    </div>
+
+    <button class="back-btn" id="buynow" value="submit">BuyNow </button>
+  </div>
+</section>
+
+<!-- BUY SUCCESS MODAL -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="checkmark">✔</div>
+    <h2>Order Placed!</h2>
+    <p>Thank you for your purchase. Your order has been placed successfully.</p>
+    <button class="close-btn" id="closePopup">Continue Shopping</button>
+  </div>
+</div>
+
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const productId = parseInt(params.get("id"));
+
+const products = [
+  {
+    id:1,
+    image:"../images/lays1.png",
+    bg:"#93b31c",
+    title:"Lay's Veggie Poppables Ranch",
+    description:"Delightfully crispy snack.",
+    nutrition:"Calories:150 | Fat:8g | Sodium:210mg",
+    reviews:"★★★★☆ 4.2/5"
+  },
+  {
+    id:2,
+    image:"../images/lays5.png",
+    bg:"#e30613",
+    title:"Lay's Sweet & Spicy Honey",
+    description:"Perfect blend of sweet and heat.",
+    nutrition:"Calories:160 | Fat:9g | Sodium:230mg",
+    reviews:"★★★★★ 4.8/5"
+  },
+  {
+    id:3,
+    image:"../images/lays4.png",
+    bg:"#8b0000",
+    title:"Lay's Dill Pickle",
+    description:"Tangy and crunchy flavor.",
+    nutrition:"Calories:150 | Fat:8g | Sodium:180mg",
+    reviews:"★★★★☆ 4.3/5"
+  },
+  {
+    id:4,
+    image:"../images/lays2.png",
+    bg:"#a9c8d8",
+    title:"Lay's Classic",
+    description:"Original crispy taste.",
+    nutrition:"Calories:150 | Fat:8g | Sodium:170mg",
+    reviews:"★★★★☆ 4.1/5"
+  },
+  {
+    id:5,
+    image:"../images/lays3.png",
+    bg:"#c63d1f",
+    title:"Lay's Flamin Hot",
+    description:"Fiery and bold flavor.",
+    nutrition:"Calories:160 | Fat:9g | Sodium:250mg",
+    reviews:"★★★★★ 4.7/5"
+  }
+];
+
+
+
+let currentIndex = products.findIndex(p => p.id === productId);
+if (currentIndex === -1) currentIndex = 0;
+
+const hero = document.getElementById("hero");
+const image = document.getElementById("productImage");
+const title = document.getElementById("productTitle");
+const description = document.getElementById("description");
+const nutrition = document.getElementById("nutrition");
+const reviews = document.getElementById("reviews");
+
+function renderProduct(index) {
+  const product = products[index];
+
+  hero.style.background = product.bg;
+
+  image.style.opacity = 0;
+  setTimeout(() => {
+    image.src = product.image;
+    image.style.opacity = 1;
+  }, 200);
+
+  title.textContent = product.title;
+  description.textContent = product.description;
+  nutrition.textContent = product.nutrition;
+  reviews.textContent = product.reviews;
+}
+
+document.getElementById("next").addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % products.length;
+  renderProduct(currentIndex);
+});
+
+document.getElementById("prev").addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + products.length) % products.length;
+  renderProduct(currentIndex);
+});
+
+document.querySelectorAll(".accordion-header").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const body = btn.nextElementSibling;
+    body.style.display = body.style.display === "block" ? "none" : "block";
+  });
+});
+
+window.addEventListener("scroll", () => {
+  document.getElementById("navbar")
+    .classList.toggle("scrolled", window.scrollY > 50);
+});
+
+renderProduct(currentIndex);
+/*const buyNowButton = document.getElementById("buynow");
+const popup = document.getElementById("popup");
+const closePopup = document.getElementById("closePopup");
+
+buyNowButton.addEventListener("click", () => {
+  
+});
+
+closePopup.addEventListener("click", () => {
+  popup.classList.remove("active");
+});*/
+
+const buyNowButton = document.getElementById("buynow");
+
+buyNowButton.addEventListener("click", () => {
+    // You can pass product data via URL params
+    const productName = "Lays Classic";
+    const price = 20;
+
+    window.location.href = `buyform.html?name=${encodeURIComponent(productName)}&price=${price}`;
+});
+
+
+</script>
+
+</body>
+</html>
